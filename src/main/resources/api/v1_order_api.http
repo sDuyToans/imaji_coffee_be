@@ -1,0 +1,46 @@
+POST http://localhost:8080/api/v1/order
+Content-Type: application/json
+Accept: application/json
+
+{
+  "userId": 1,
+  "email": "john.doe@example.com",
+  "shippingAddress": {
+    "name": "John Doe",
+    "country": "US",
+    "province": "California",
+    "city": "Los Angeles",
+    "postalCode": "90001",
+    "street": "123 Main St",
+    "apartment": "Unit 4B",
+    "phoneNumber": "1234567890"
+  },
+  "totalAmount": 120.50,
+  "currency": "USD",
+  "items": [
+    {
+      "productId": 1,
+      "productName": "Coffee Beans",
+      "price": 50.25,
+      "quantity": 1
+    },
+    {
+      "productId": 2,
+      "productName": "Espresso Machine",
+      "price": 50.25,
+      "quantity": 1
+    }
+  ]
+}
+
+### GET ORDER
+GET http://localhost:8080/api/v1/order/1
+
+### UPDATE ORDER STATUS
+PATCH http://localhost:8080/api/v1/order/1/status
+Content-Type: application/json
+
+{
+  "status": "PAID",
+  "updatedBy": "ADMIN"
+}

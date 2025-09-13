@@ -1,5 +1,6 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.entities;
+package com.duytoan.imajicoffee.imaji_coffee_be.entities.common;
 
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

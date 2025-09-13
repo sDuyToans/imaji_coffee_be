@@ -1,6 +1,6 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.controller;
 
-import com.duytoan.imajicoffee.imaji_coffee_be.dto.EventDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.common.EventDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.EventServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

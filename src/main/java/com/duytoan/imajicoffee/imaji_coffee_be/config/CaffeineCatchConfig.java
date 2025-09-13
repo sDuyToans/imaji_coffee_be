@@ -22,9 +22,13 @@ public class CaffeineCatchConfig {
         SimpleCacheManager manager = new SimpleCacheManager();
         manager.setCaches(Arrays.asList(
                 new CaffeineCache("products", cacheSpec().build()),
+                new CaffeineCache("products_size", cacheSpec().build()),
+                new CaffeineCache("products_category", cacheSpec().build()),
+                new CaffeineCache("searchProducts", cacheSpec().build()),
                 new CaffeineCache("news", cacheSpec().build()),
                 new CaffeineCache("upcomingEvents", cacheSpec().build()),
-                new CaffeineCache("closedEvents", cacheSpec().build())
+                new CaffeineCache("closedEvents", cacheSpec().build()),
+                new CaffeineCache("spaces", cacheSpec().build())
         ));
         return manager;
     }

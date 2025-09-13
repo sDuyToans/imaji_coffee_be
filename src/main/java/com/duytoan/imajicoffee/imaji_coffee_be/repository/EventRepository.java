@@ -1,6 +1,6 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.repository;
 
-import com.duytoan.imajicoffee.imaji_coffee_be.entities.Event;
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.common.Event;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

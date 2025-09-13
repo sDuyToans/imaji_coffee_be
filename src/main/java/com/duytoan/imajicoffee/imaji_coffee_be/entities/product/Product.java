@@ -1,5 +1,6 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.entities;
+package com.duytoan.imajicoffee.imaji_coffee_be.entities.product;
 
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +37,17 @@ public class Product extends BaseEntity {
     @Column(name = "is_available_at_web")
     private Boolean isAvailableAtWeb;
 
-    @ColumnDefault("0")
+    @ColumnDefault("30")
     @Column(name = "quantity")
     private Integer quantity;
 
+    @ColumnDefault("'coffee_baverage'")
+    @Lob
+    @Column(name = "category", nullable = false)
+    private String category;
+
     @OneToMany(mappedBy = "product")
+    @OrderBy("isMain DESC, productImageId ASC")
     private Set<ProductImage> productImages = new LinkedHashSet<>();
+
 }

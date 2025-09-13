@@ -1,16 +1,17 @@
 CREATE TABLE products
 (
     product_id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name                VARCHAR(255)                          NOT NULL,
+    name                VARCHAR(255)                                      NOT NULL,
     description         TEXT,
-    price               DECIMAL(10, 2)                        NOT NULL,
+    price               DECIMAL(10, 2)                                    NOT NULL,
     old_price           DECIMAL(10, 2),
-    is_available_at_web BOOLEAN     DEFAULT TRUE,
-    quantity            INT         DEFAULT 0,
-    created_at          TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    created_by          VARCHAR(20)                           NOT NULL,
-    updated_at          TIMESTAMP   DEFAULT NULL,
-    updated_by          VARCHAR(20) DEFAULT NULL
+    is_available_at_web BOOLEAN                                                    DEFAULT TRUE,
+    quantity            INT                                                        DEFAULT 30,
+    category            ENUM ('coffee_baverage', 'food_snack', 'at_home') NOT NULL DEFAULT 'coffee_baverage',
+    created_at          TIMESTAMP                                                  DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by          VARCHAR(20)                                       NOT NULL,
+    updated_at          TIMESTAMP                                                  DEFAULT NULL,
+    updated_by          VARCHAR(20)                                                DEFAULT NULL
 );
 
 
@@ -58,4 +59,46 @@ CREATE TABLE event
     created_by VARCHAR(20)                           NOT NULL,
     updated_at TIMESTAMP   DEFAULT NULL,
     updated_by VARCHAR(20) DEFAULT NULL
-)
+);
+
+CREATE TABLE space
+(
+    space_id   BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name       VARCHAR(255)                          NOT NULL,
+    type       VARCHAR(50)                           NOT NULL,
+    image      VARCHAR(500)                          NOT NULL,
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by VARCHAR(20)                           NOT NULL,
+    updated_at TIMESTAMP   DEFAULT NULL,
+    updated_by VARCHAR(20) DEFAULT NULL
+);
+
+CREATE TABLE promos
+(
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code           VARCHAR(50)                           NOT NULL,
+    title          VARCHAR(255)                          NOT NULL,
+    description    TEXT,
+    discount_type  ENUM ('percentage', 'fixed', 'free_shipping'),
+    discount_value DECIMAL(10, 2),
+    start_at       TIMESTAMP,
+    end_at         TIMESTAMP,
+    is_active      BOOLEAN     DEFAULT TRUE,
+    created_at     TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by     VARCHAR(20)                           NOT NULL,
+    updated_at     TIMESTAMP   DEFAULT NULL,
+    updated_by     VARCHAR(20) DEFAULT NULL
+);
+
+CREATE TABLE promo_products
+(
+    promo_id   BIGINT                                NOT NULL,
+    product_id BIGINT                                NOT NULL,
+    PRIMARY KEY (promo_id, product_id),
+    FOREIGN KEY (promo_id) REFERENCES promos (id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id),
+    created_at TIMESTAMP   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_by VARCHAR(20)                           NOT NULL,
+    updated_at TIMESTAMP   DEFAULT NULL,
+    updated_by VARCHAR(20) DEFAULT NULL
+);

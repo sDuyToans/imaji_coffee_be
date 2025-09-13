@@ -1,7 +1,8 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.services.impl;
 
-import com.duytoan.imajicoffee.imaji_coffee_be.dto.NewDto;
-import com.duytoan.imajicoffee.imaji_coffee_be.entities.News;
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.common.NewDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.common.News;
+import com.duytoan.imajicoffee.imaji_coffee_be.exceptions.ResourceNotFoundException;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.NewRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.INewService;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,14 @@ public class NewServiceImpl implements INewService {
     public List<NewDto> getPageNews(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return newRepository.findAll(pageable).stream().map(this::mapToNewDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public NewDto getNewById(Long newId) {
+        return newRepository
+                .findById(newId)
+                .map(this::mapToNewDto)
+                .orElseThrow(() -> new ResourceNotFoundException("New", "NewId", newId.toString()));
     }
 
     private NewDto mapToNewDto(News news){

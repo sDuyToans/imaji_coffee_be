@@ -1,6 +1,6 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.services;
 
-import com.duytoan.imajicoffee.imaji_coffee_be.dto.EventDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.common.EventDto;
 
 import java.util.List;
 

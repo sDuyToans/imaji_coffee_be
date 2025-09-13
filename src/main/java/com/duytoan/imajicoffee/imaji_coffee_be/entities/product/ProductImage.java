@@ -1,8 +1,10 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.entities;
+package com.duytoan.imajicoffee.imaji_coffee_be.entities.product;
 
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -23,5 +25,9 @@ public class ProductImage extends BaseEntity {
 
     @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;
+
+    @ColumnDefault("0")
+    @Column(name = "is_main")
+    private Boolean isMain;
 
 }

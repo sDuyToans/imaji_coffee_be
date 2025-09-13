@@ -1,7 +1,7 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.services.impl;
 
-import com.duytoan.imajicoffee.imaji_coffee_be.dto.EventDto;
-import com.duytoan.imajicoffee.imaji_coffee_be.entities.Event;
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.common.EventDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.common.Event;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.EventRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.IEventService;
 import lombok.RequiredArgsConstructor;

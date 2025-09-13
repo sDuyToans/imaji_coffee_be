@@ -1,4 +1,4 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.dto;
+package com.duytoan.imajicoffee.imaji_coffee_be.dto.product;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +16,7 @@ public class ProductDto {
     private BigDecimal oldPrice;
     private Boolean isAvailableAtWeb;;
     private Integer quantity;
+    private String category;
+
     private Set<ProductImageDto> images;
 }

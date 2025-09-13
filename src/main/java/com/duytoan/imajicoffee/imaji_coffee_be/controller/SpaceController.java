@@ -1,0 +1,28 @@
+package com.duytoan.imajicoffee.imaji_coffee_be.controller;
+
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.common.SpaceDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.SpaceServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/spaces")
+public class SpaceController {
+
+    private final SpaceServiceImpl spaceService;
+
+    @GetMapping
+    public ResponseEntity<List<SpaceDto>> getSpaces(){
+        List<SpaceDto> spaceDtoList = spaceService.getSpaces();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(spaceDtoList);
+    }
+}

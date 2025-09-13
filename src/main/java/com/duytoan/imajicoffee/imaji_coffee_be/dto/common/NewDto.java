@@ -1,4 +1,4 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.dto;
+package com.duytoan.imajicoffee.imaji_coffee_be.dto.common;
 
 import lombok.Getter;
 import lombok.Setter;

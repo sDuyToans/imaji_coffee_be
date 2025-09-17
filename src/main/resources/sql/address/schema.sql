@@ -15,7 +15,7 @@ CREATE TABLE addresses
     created_by   VARCHAR(20)                           NOT NULL,
     updated_at   TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     updated_by   VARCHAR(20) DEFAULT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE SET NULL,
     INDEX idx_addresses_email (email),
     INDEX idx_address_user_id (user_id)
 );

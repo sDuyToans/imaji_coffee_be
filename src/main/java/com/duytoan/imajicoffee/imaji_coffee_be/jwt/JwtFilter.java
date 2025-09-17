@@ -1,6 +1,7 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.jwt;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.exceptions.ResourceNotFoundException;
+import com.duytoan.imajicoffee.imaji_coffee_be.security.CustomUserDetails;
 import com.duytoan.imajicoffee.imaji_coffee_be.security.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +22,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
     @Value("${jwt.secret}")
     private String secret;
 
@@ -34,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
             token = authHeader.substring(7);
             try {
                 username = jwtUtil.extractUserName(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);
             } catch (ResourceNotFoundException e) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write("User not found");
@@ -47,15 +48,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // if username and user is not authenticated yet
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
+            CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);
             // Validate token
             if (jwtUtil.isTokenValid(token, userDetails)) {
+                Long useId = userDetails.getUser().getUserId();
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        new UsernamePasswordAuthenticationToken(useId, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(userDetails);
-
                 // Set authentication into Security Context
+                System.out.println(userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }

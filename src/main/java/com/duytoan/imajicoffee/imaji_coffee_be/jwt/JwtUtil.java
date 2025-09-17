@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
-    private static final long EXPIRATION_TIME = 86400000; // 1 DAY
+    private static final long EXPIRATION_TIME = 2592000000L; // 1 DAY
     @Value("${jwt.secret}")
     private String secret;
 
@@ -65,9 +64,9 @@ public class JwtUtil {
 
 
     // Validate token by username and expiration
-    public boolean isTokenValid(String token, UserDetails userDetails){
+    public boolean isTokenValid(String token, CustomUserDetails userDetails){
         final String username = extractUserName(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return username.equals(userDetails.getEmail()) && !isTokenExpired(token);
     }
 
     // Check if token is expired

@@ -2,7 +2,7 @@ package com.duytoan.imajicoffee.imaji_coffee_be.security;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.user.User;
 import com.duytoan.imajicoffee.imaji_coffee_be.exceptions.ResourceNotFoundException;
-import com.duytoan.imajicoffee.imaji_coffee_be.repository.UserRepository;
+import com.duytoan.imajicoffee.imaji_coffee_be.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -17,6 +17,7 @@ public class PaymentServiceImpl implements IPaymentService {
                     .setAmount(requestDto.amount())
                     .setCurrency(requestDto.currency())
                     .addPaymentMethodType("card")
+                    .putMetadata("orderId", String.valueOf(requestDto.orderId()))
                     .build();
             PaymentIntent paymentIntent = PaymentIntent.create(params);
             return new PaymentIntentResponseDto(paymentIntent.getId(), paymentIntent.getClientSecret());

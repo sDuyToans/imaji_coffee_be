@@ -5,15 +5,18 @@ import com.duytoan.imajicoffee.imaji_coffee_be.dto.cart.CartItemResponseDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.CartItem;
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.cart.Cart;
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.product.Product;
+import com.duytoan.imajicoffee.imaji_coffee_be.entities.product.Ship;
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.user.User;
 import com.duytoan.imajicoffee.imaji_coffee_be.exceptions.ResourceNotFoundException;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.auth.UserRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.cart.CartItemRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.cart.CartRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.product.ProductRepository;
+import com.duytoan.imajicoffee.imaji_coffee_be.repository.product.ShipRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.cart.ICartItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class CartItemServiceImpl implements ICartItemService {
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
     private final UserRepository userRepository;
+    private final ShipRepository shipRepository;
 
     @Override
     public CartItemResponseDto addItem(Long userId, CartItemRequestDto request) {
@@ -73,12 +77,24 @@ public class CartItemServiceImpl implements ICartItemService {
     }
 
     @Override
+    @Transactional
     public void removeItem(Long userId, Long cartItemId) {
+        Cart cart = cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "userId", userId.toString()));
         CartItem cartItem = cartItemRepository.findByIdAndCart_User_UserId(cartItemId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem", "CartItemId", cartItemId.toString()));
 
         cartItemRepository.delete(cartItem);
+        if (cart.getCartItems().isEmpty()){
+            Ship freeShip = shipRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("Ship", "shipMethodId", String.valueOf(1)));
+            cart.setShipMethod(freeShip);
+        }
+
+        cart.getCartItems().remove(cartItem);
+
+        cartRepository.save(cart); // persist cart to db
     }
+
 
     private CartItemResponseDto mapToCartItemResponseDto(CartItem cartItem) {
         return new CartItemResponseDto(

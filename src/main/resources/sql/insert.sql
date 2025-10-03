@@ -143,3 +143,5 @@ VALUES
     ('SUMMER10', 'Summer Sale 10% OFF', 'Ends in 1 hour!', 'percentage', 10.00, NOW(), DATE_ADD(NOW(), INTERVAL 60 MINUTE), TRUE, NOW(), 'system'),
     ('HOLIDAY15', 'Holiday Special $15 OFF', 'Ends in 2 hours!', 'fixed', 15.00, NOW(), DATE_ADD(NOW(), INTERVAL 120 MINUTE), TRUE, NOW(), 'system'),
     ('NEWUSER5', 'New User $5 OFF', 'Ends in 30 minutes!', 'fixed', 5.00, NOW(), DATE_ADD(NOW(), INTERVAL 30 MINUTE), TRUE, NOW(), 'system');
+
+

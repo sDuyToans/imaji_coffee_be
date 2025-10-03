@@ -1,4 +1,4 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.dto.payment;
 
-public record PaymentIntentRequestDto(long amount, String currency) {
+public record PaymentIntentRequestDto(Long orderId, long amount, String currency) {
 }

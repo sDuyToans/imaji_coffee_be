@@ -1,7 +1,9 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.security;
 
+import com.duytoan.imajicoffee.imaji_coffee_be.OAuth.OAuth2LoginSuccessHandler;
 import com.duytoan.imajicoffee.imaji_coffee_be.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,22 +27,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
+    private final List<String> publicPaths;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    @Value("${imajicoffee.cors.allowed-origins}")
+    private String allowedOrigins;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> {
-                            auth.requestMatchers("/api/v1/cart/**").hasRole("USER");
-                            auth.requestMatchers("/api/v1/account/**").hasRole("USER");
-                            auth.requestMatchers("/api/v1/auth/**").permitAll();
-                            auth.anyRequest().permitAll();
-                        }
-
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // no HTTP session
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // validate JWT before any class
+                .authorizeHttpRequests((requests) -> {
+                    publicPaths.forEach(path ->
+                            requests.requestMatchers(path).permitAll()
+                    );
+                    requests.requestMatchers("/oauth2/**").permitAll();
+                    requests.anyRequest().hasAnyRole("USER", "ADMIN");
+                })
+                .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -51,7 +59,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowCredentials(true);

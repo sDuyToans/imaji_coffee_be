@@ -18,10 +18,10 @@ public class PromoServiceImpl implements IPromoService {
     @Override
     public ProductPromosDto getPromosForProduct(Long productId) {
         List<PromoDto> availablePromos = promoRepository
-                .findAvailablePromosByProductId(productId)
+                .findTop3ByOrderByPromoIdAsc()
                 .stream().map(this::mapToPromoDto).toList();
         List<PromoDto> unavailablePromos = promoRepository
-                .findUnavailablePromosByProductId(productId)
+                .findTop3ByOrderByPromoIdDesc()
                 .stream().map(this::mapToPromoDto).toList();
         return new ProductPromosDto(productId, availablePromos, unavailablePromos);
     }

@@ -11,7 +11,17 @@ public class PublicPathConfig {
     @Bean
     public List<String> publicPaths() {
         return List.of(
-                "api/v1/menu/**"
+                "/api/v1/products/**",
+                "/api/v1/events/**",
+                "/api/v1/news/**",
+                "/api/v1/spaces/**",
+                "/api/v1/payment/**",
+                "/api/v1/webhooks/**",
+                "/api/v1/ship-methods/**",
+                "/api/v1/auth/**",
+                "/actuator/health",
+                "/error"
+
         );
     }
 }

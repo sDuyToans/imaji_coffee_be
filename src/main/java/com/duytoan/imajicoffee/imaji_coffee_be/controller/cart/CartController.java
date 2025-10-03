@@ -53,4 +53,11 @@ public class CartController {
         CartDto cartDto = cartService.updatePromo(userId, null); // null means clear
         return ResponseEntity.ok().body(cartDto);
     }
+
+    @PostMapping("/clearShip")
+    public ResponseEntity<CartDto> clearShipping(Authentication authentication) {
+        Long userId = getUserId(authentication);
+        CartDto cartDto = cartService.clearShipping(userId);
+        return ResponseEntity.ok().body(cartDto);
+    }
 }

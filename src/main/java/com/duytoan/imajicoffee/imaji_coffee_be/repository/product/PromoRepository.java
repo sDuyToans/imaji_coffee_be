@@ -24,4 +24,7 @@ public interface PromoRepository extends JpaRepository<Promo, Long> {
             "   SELECT 1 FROM PromoProduct pp " +
             "   WHERE pp.promo = p AND pp.product.productId = :productId)")
     List<Promo> findUnavailablePromosByProductId(@Param("productId") Long productId);
+
+    List<Promo> findTop3ByOrderByPromoIdAsc();
+    List<Promo> findTop3ByOrderByPromoIdDesc();
 }

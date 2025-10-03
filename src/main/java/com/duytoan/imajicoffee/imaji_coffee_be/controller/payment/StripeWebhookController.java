@@ -27,7 +27,11 @@ public class StripeWebhookController {
             if ("payment_intent.succeeded".equals(event.getType())) {
                 PaymentIntent paymentIntent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElseThrow();
                 String orderId = paymentIntent.getMetadata().get("orderId");
-                orderService.updateOrderStatus(Long.parseLong(orderId), new UpdateOrderStatusDto(OrderStatus.PAID, "SYSTEM"));
+                if (orderId != null && !orderId.isEmpty()) {
+                    orderService.updateOrderStatus(Long.parseLong(orderId), new UpdateOrderStatusDto(OrderStatus.PAID, "SYSTEM"));
+                } else {
+                    System.out.println("Missing orderId in metadata");
+                }
              }
             return ResponseEntity.status(HttpStatus.OK).body("success");
         } catch (Exception e){

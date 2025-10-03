@@ -27,14 +27,6 @@ CREATE TABLE product_images
     FOREIGN KEY (product_id) REFERENCES products (product_id) ON DELETE CASCADE
 );
 
-# export interface NewItem {
-#   id: number;
-# title: string;
-# description: string;
-# image: string;
-# created_date: string;
-# time: string;
-# }
 
 CREATE TABLE news
 (

@@ -6,5 +6,6 @@ public interface ICartService {
     CartDto getCart(Long userId);
     CartDto updateShipping(Long userId, Long shippingId);
     CartDto updatePromo(Long userId, Long promoId);
+    CartDto clearShipping(Long userId);
     void clearCart(Long userId);
 }

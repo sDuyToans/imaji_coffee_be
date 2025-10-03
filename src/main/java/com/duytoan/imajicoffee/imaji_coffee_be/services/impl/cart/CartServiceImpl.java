@@ -68,6 +68,16 @@ public class CartServiceImpl implements ICartService {
     }
 
     @Override
+    public CartDto clearShipping(Long userId) {
+        Cart cart = cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart", "userId", userId.toString()));
+        Ship freeShip = shipRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException("Ship", "shipMethodId", String.valueOf(1)));
+        cart.setShipMethod(freeShip);
+        cartRepository.save(cart);
+        return mapToCartDto(cart);
+    }
+
+    @Override
     public void clearCart(Long userId) {
         Cart cart = cartRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "UserId", userId.toString()));

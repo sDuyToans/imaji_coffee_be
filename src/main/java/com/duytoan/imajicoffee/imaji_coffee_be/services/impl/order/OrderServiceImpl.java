@@ -11,10 +11,13 @@ import com.duytoan.imajicoffee.imaji_coffee_be.exceptions.ResourceNotFoundExcept
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.auth.UserRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.order.OrderRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.repository.product.ShipRepository;
+import com.duytoan.imajicoffee.imaji_coffee_be.services.email.IMailService;
+import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.address.AddressServiceImpl;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.payment.PaymentServiceImpl;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.order.IOrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,15 +38,22 @@ public class OrderServiceImpl implements IOrderService {
     private final ShipRepository shipRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AddressServiceImpl addressServiceImpl;
+    private final IMailService mailService;
 
     @Override
     @Transactional // if order fail -> roll back
     public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, Long userId) {
         Order order = mapToOrder(orderRequestDto, userId);
 
+
+        // save order
+        Order savedOrder = orderRepository.save(order);
+
         // create payment intent
         var paymentIntentResponse = paymentService.createPaymentIntent(
                 new PaymentIntentRequestDto(
+                        savedOrder.getOrderId(),
                         orderRequestDto.totalAmount().multiply(new BigDecimal("100")).longValue(),
                         orderRequestDto.currency()
                 )
@@ -52,12 +62,16 @@ public class OrderServiceImpl implements IOrderService {
 
         order.setPaymentIntentId(paymentIntentResponse.paymentIntentId());
 
-        // save order
-        Order savedOrder = orderRepository.save(order);
-
         // save order item
         orderItemService.saveOrderItems(savedOrder, orderRequestDto.items());
 
+        // save address
+        if (userId != null){
+            addressServiceImpl.saveAddressForOder(orderRequestDto.shippingAddress(), userId);
+        }
+
+        // send email
+//        mailService.sendOrderInfoToEmail(order);
 
         return new OrderResponseDto(savedOrder.getOrderId(), savedOrder.getStatus().name(), paymentIntentResponse.clientSecret());
     }
@@ -92,6 +106,22 @@ public class OrderServiceImpl implements IOrderService {
                 order.getCreatedAt(),
                 orderItemResponseDtoList
         );
+    }
+
+    @Override
+    public List<AccountOrderDetailResponseDto> getAccountOrders(Long userId) {
+        List<AccountOrderDetailResponseDto> orderList = orderRepository.findByUserId(userId)
+                .stream().map(this::mapToAccountOderDetail)
+                .toList();
+        return orderList;
+    }
+
+    private AccountOrderDetailResponseDto mapToAccountOderDetail(Order order) {
+        AccountOrderDetailResponseDto accountOrderDetailResponseDto = new AccountOrderDetailResponseDto();
+        BeanUtils.copyProperties(order, accountOrderDetailResponseDto);
+        accountOrderDetailResponseDto.setItems(order.getOrderItems().size());
+        accountOrderDetailResponseDto.setAmount(order.getTotalAmount());
+        return accountOrderDetailResponseDto;
     }
 
     private OrderItemResponseDto mapToOrderItemResponseDto(OrderItem orderItem) {

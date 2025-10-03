@@ -3,6 +3,7 @@ package com.duytoan.imajicoffee.imaji_coffee_be.controller.cart;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.cart.CartItemRequestDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.cart.CartItemResponseDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.cart.UpdateQuantityCartItemRequest;
+import com.duytoan.imajicoffee.imaji_coffee_be.repository.cart.CartRepository;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.cart.CartItemServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartItemController {
 
     private final CartItemServiceImpl cartItemService;
+    private final CartRepository cartRepository;
 
     private Long getUserId(Authentication authentication) {
         return Long.parseLong(authentication.getName());
@@ -44,6 +46,7 @@ public class CartItemController {
     public ResponseEntity<Void> removeItem(Authentication authentication, @PathVariable Long cartItemId) {
         Long userId = getUserId(authentication);
         cartItemService.removeItem(userId, cartItemId);
+
         return ResponseEntity.noContent().build();
     }
 }

@@ -16,9 +16,13 @@ import java.util.Date;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * @author duytoan
+ * @since 10/2025
+ */
 @Component
 public class JwtUtil {
-    private static final long EXPIRATION_TIME = 2592000000L; // 1 DAY
+    private static final long EXPIRATION_TIME = 2592000000L; // 30 DAYs
     @Value("${jwt.secret}")
     private String secret;
 

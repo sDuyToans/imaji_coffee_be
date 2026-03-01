@@ -1,36 +1,67 @@
 package com.duytoan.imajicoffee.imaji_coffee_be.controller.auth;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.auth.LoginRequestDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.dto.auth.PasswordRequestDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.auth.SignUpRequestDto;
+import com.duytoan.imajicoffee.imaji_coffee_be.enums.ActionType;
 import com.duytoan.imajicoffee.imaji_coffee_be.enums.SignupStatus;
 import com.duytoan.imajicoffee.imaji_coffee_be.jwt.JwtUtil;
-import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.auth.AuthServiceImpl;
+import com.duytoan.imajicoffee.imaji_coffee_be.services.auth.IAuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.Map;
 
+/**
+ * Auth controller
+ * @author duytoan
+ * @since 10/2025
+ */
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 public class AuthController {
-    private final AuthServiceImpl authService;
+
+    private final IAuthService authService;
     private final JwtUtil  jwtUtil;
 
+    /**
+     * Set token to cookie after logged in
+     * @param requestDto -> login request dto
+     * @return String Map of message say ok
+     */
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+
         String token = authService.login(requestDto);
 
-        return ResponseEntity.ok(Map.of("token", token));
+        ResponseCookie cookie = ResponseCookie.from("token", token)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .sameSite("Lax")
+                .maxAge(Duration.ofDays(30))
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+        return ResponseEntity.ok(Map.of("message", "ok"));
     }
 
+    /**
+     * Sign up route
+     * @param requestDto -> sign up request dto
+     * @return Status Code and message which is "error" or "successfully created"
+     */
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> signup(@RequestBody SignUpRequestDto requestDto) {
-        SignupStatus status = authService.singup(requestDto);
+        SignupStatus status = authService.signup(requestDto);
         return switch (status) {
             case SIGNUP_SUCCESS -> ResponseEntity.ok().body(Map.of("message", "User Register Successfully"));
             case EMAIL_ALREADY_EXISTS -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Email Already Exists"));
@@ -39,6 +70,32 @@ public class AuthController {
         };
     }
 
+    /**
+     * Log out function
+     * @param response -> http servlet res
+     * @return message with content Log out successfully!
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+
+        ResponseCookie cookie  = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ResponseEntity.ok().body(Map.of("message", "Logout Successfully"));
+    }
+
+    /**
+     * Testing route for checking if the login validate or not, this is for string token version return only, not the cookie one
+     * @param request -> http servlet res
+     * @return HttpStatus and is the token valid
+     */
     @GetMapping("/validate")
     public ResponseEntity<Map<String, Boolean>> validateToken(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
@@ -56,5 +113,18 @@ public class AuthController {
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("valid", false));
         }
+    }
+
+    /**
+     * Change account password
+     * @param requestDto -> PasswordRequestDto object
+     * @return -> res entity obj
+     */
+    @PatchMapping
+    public ResponseEntity<Map<ActionType, String>> updatePassword(@RequestBody PasswordRequestDto requestDto){
+        ActionType type = authService.changePassword(requestDto);
+        if (type.equals(ActionType.SUCCESS)) return ResponseEntity.ok(Map.of(type, "Password changed!"));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(type, "There was an error when changing password. Please try again!"));
     }
 }

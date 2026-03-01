@@ -5,6 +5,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Public path config in which these path will not require authentication
+ * @author duytoan
+ * @since 10/2025
+ */
 @Configuration
 public class PublicPathConfig {
 
@@ -20,8 +25,8 @@ public class PublicPathConfig {
                 "/api/v1/ship-methods/**",
                 "/api/v1/auth/**",
                 "/actuator/health",
-                "/error"
-
+                "/error",
+                "/ws/**"
         );
     }
 }

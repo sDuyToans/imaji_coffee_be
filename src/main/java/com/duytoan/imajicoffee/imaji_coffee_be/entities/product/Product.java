@@ -50,7 +50,10 @@ public class Product extends BaseEntity {
     @OrderBy("isMain DESC, productImageId ASC")
     private Set<ProductImage> productImages = new LinkedHashSet<>();
 
-
+    /**
+     * get the main image of the product
+     * @return -> string path to the image
+     */
     public String getMainImageUrl() {
         return productImages.stream()
                 .filter(ProductImage::getIsMain)

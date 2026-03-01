@@ -10,6 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Cache for spring boot -> using Caffeien for small implementation instead of Redix, etc...
+ * @author duytoan
+ * @since 10/2025
+ */
 @Configuration
 public class CaffeineCatchConfig {
     private Caffeine<Object, Object> cacheSpec() {
@@ -17,6 +22,11 @@ public class CaffeineCatchConfig {
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .maximumSize(1000);
     }
+
+    /**
+     * Method defines name catch for each routes
+     * @return
+     */
     @Bean
     public CacheManager caffeineCacheManager() {
         SimpleCacheManager manager = new SimpleCacheManager();

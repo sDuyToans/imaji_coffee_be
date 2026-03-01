@@ -4,6 +4,16 @@ import com.duytoan.imajicoffee.imaji_coffee_be.dto.product.ShipMethodDto;
 
 import java.util.List;
 
+/**
+ * Ship method interface contains method's name and parameters
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface IShipMethodService {
-    public abstract List<ShipMethodDto> getShipMethods();
+
+    /**
+     * Get ship methods dto
+     * @return list of ship method dto
+     */
+    List<ShipMethodDto> getShipMethods();
 }

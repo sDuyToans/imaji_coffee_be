@@ -6,6 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+/**
+ * Stripe config
+ * @author duytoan
+ * @since 10/2025
+ */
 @Configuration
 @PropertySource("classpath:application.properties")
 public class StripeConfig {

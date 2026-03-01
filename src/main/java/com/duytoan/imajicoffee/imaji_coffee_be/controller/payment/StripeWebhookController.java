@@ -2,7 +2,7 @@ package com.duytoan.imajicoffee.imaji_coffee_be.controller.payment;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.order.UpdateOrderStatusDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.enums.OrderStatus;
-import com.duytoan.imajicoffee.imaji_coffee_be.services.impl.order.OrderServiceImpl;
+import com.duytoan.imajicoffee.imaji_coffee_be.services.order.IOrderService;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
@@ -12,14 +12,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author duytoan
+ * @since 10/2025
+ */
 @RestController
 @RequestMapping("/api/v1/webhooks")
 @RequiredArgsConstructor
 public class StripeWebhookController {
-    private final OrderServiceImpl orderService;
+    private final IOrderService orderService;
     @Value("${stripe.webhook.secretKey}")
     private String webhookSecret;
 
+    /**
+     * Handle stripe event {web hook, payment intent, create order}
+     * @param payload -> string web hook payload
+     * @param sigHeader -> string sig header
+     * @return -> res entity
+     */
     @PostMapping
     public ResponseEntity<String> handleStripeEvent(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader){
         try {

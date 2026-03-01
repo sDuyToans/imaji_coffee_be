@@ -5,6 +5,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Ship repository
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface ShipRepository extends JpaRepository<Ship, Long> {
-    public List<Ship> findAllByIsActiveTrue();
+    /**
+     * Get active ship method
+     * @return ship method list
+     */
+    List<Ship> findAllByIsActiveTrue();
 }

@@ -5,6 +5,16 @@ import com.duytoan.imajicoffee.imaji_coffee_be.entities.order.Order;
 
 import java.util.List;
 
+/**
+ * OrderItem interface contains method's name and parameters
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface IOrderItemService {
-    public void saveOrderItems(Order order, List<OrderItemDto> orderItemDtoList);
+    /**
+     * Save order items
+     * @param order -> order object
+     * @param orderItemDtoList -> list of order items
+     */
+    void saveOrderItems(Order order, List<OrderItemDto> orderItemDtoList);
 }

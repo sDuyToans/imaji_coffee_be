@@ -7,7 +7,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Promo repository
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface PromoRepository extends JpaRepository<Promo, Long> {
+    /**
+     * Filter available promos by product id and current date
+     * @param productId
+     * @return available promos
+     */
     @Query("SELECT p FROM Promo p JOIN p.promoProducts pp " +
             "WHERE pp.product.productId = :productId " +
             "AND p.isActive = true " +
@@ -16,6 +26,11 @@ public interface PromoRepository extends JpaRepository<Promo, Long> {
     List<Promo> findAvailablePromosByProductId(@Param("productId") Long productId);
 
 
+    /**
+     * Filter unavailable promos by product id and current date
+     * @param productId
+     * @return unavailable promos
+     */
     @Query("SELECT p FROM Promo p " +
             "WHERE p.isActive = true " +
             "AND p.startAt <= CURRENT_TIMESTAMP " +
@@ -25,6 +40,15 @@ public interface PromoRepository extends JpaRepository<Promo, Long> {
             "   WHERE pp.promo = p AND pp.product.productId = :productId)")
     List<Promo> findUnavailablePromosByProductId(@Param("productId") Long productId);
 
+    /**
+     * Find top 3 promos order by id asc
+     * @return list of promos
+     */
     List<Promo> findTop3ByOrderByPromoIdAsc();
+
+    /**
+     * Find top 3 promos order by id desc
+     * @return
+     */
     List<Promo> findTop3ByOrderByPromoIdDesc();
 }

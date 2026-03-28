@@ -9,16 +9,46 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Address repository
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface AddressRepository extends JpaRepository<Address, Long> {
+    /**
+     * Find address by userId
+     * @param userId
+     * @return address list
+     */
     List<Address> findByUser_UserId(Long userId);
 
+    /**
+     * Count address of a user by user id
+     * @param userId
+     * @return count
+     */
     @Query("select count(a) from Address a where a.user.userId = :userId")
     long countByUser_UserId(@Param("userId") Long userId);
 
+    /**
+     * Clear default address
+     * @param userId
+     */
     @Modifying
     @Query("update Address a set a.isDefault = false where a.user.userId = :userId")
     void clearDefaultForUser(@Param("userId") Long userId);
 
+    /**
+     * Find address by multiple fields
+     * @param userId
+     * @param country
+     * @param city
+     * @param street
+     * @param postalCode
+     * @param apartment
+     * @param phoneNumber
+     * @return optional address object
+     */
     @Query("""
                     select a from Address a 
                     where a.user.userId = :userId and

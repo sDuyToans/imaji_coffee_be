@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Secrets contain files ###
+.DS_Store
+src/main/resources/application-secret.properties
+application-secret.properties
+.env
+target/

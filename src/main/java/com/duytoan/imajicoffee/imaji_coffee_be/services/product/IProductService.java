@@ -6,28 +6,61 @@ import com.duytoan.imajicoffee.imaji_coffee_be.dto.product.ProductPageResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
-
+/**
+ * Product interface contains method's name and parameters
+ * @author duytoan
+ * @since 10/2025
+ */
 public interface IProductService {
+
     /**
-     *
-     * @return all Product objects
+     * Get product list
+     * @return List product dto
      */
-    public abstract List<ProductDto> getProducts();
+    List<ProductDto> getProducts();
 
-//    /**
-//     *
-//     * @param id
-//     * @return get ProductDto object by using id
-//     */
-//    public abstract ProductDto getProduct(int productId);
+    /**
+     * Get products by size
+     * @param size -> int
+     * @return List product dto
+     */
+    List<ProductDto> getProductBySize(int size);
 
-    public abstract List<ProductDto> getProductBySize(int size);
+    /**
+     * Get products by category
+     * @param category -> string
+     * @param page -> int
+     * @param size -> int
+     * @return List product dto
+     */
+    ProductPageResponse getProductsByCategory(String category, int page, int size);
 
-    public abstract ProductPageResponse getProductsByCategory(String category, int page, int size);
+    /**
+     * Get products with filter applied
+     * @param category -> string
+     * @param page -> int
+     * @param size -> int
+     * @param search -> string
+     * @param maxPrice -> decimal number
+     * @param sortBy -> string
+     * @param sortDirection -> ASC || DESC
+     * @return List product dto
+     */
+    ProductPageResponse searchProducts(String category, int page, int size, String search, BigDecimal maxPrice, String sortBy, String sortDirection);
 
-    public abstract ProductPageResponse searchProducts(String category, int page, int size, String search, BigDecimal maxPrice, String sortBy, String sortDirection);
+    /**
+     * Get product by id
+     * @param id -> long productId
+     * @return Product dto
+     */
+    ProductDto getProductById(long id);
 
-    public abstract ProductDto getProductById(long id);
-
-    public abstract List<ProductDto> getRelatedProducts(String category, int size, long excludeId );
+    /**
+     * Get related product to the current one
+     * @param category -> string
+     * @param size -> int
+     * @param excludeId -> long
+     * @return List product dto
+     */
+    List<ProductDto> getRelatedProducts(String category, int size, long excludeId );
 }

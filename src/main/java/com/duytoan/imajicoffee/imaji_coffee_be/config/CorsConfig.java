@@ -9,6 +9,11 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * Cross site config -> allowing the connection between FE and BE {2 different hosts}
+ * @author duytoan
+ * @since 10/2025
+ */
 @Configuration
 public class CorsConfig {
 

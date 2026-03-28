@@ -13,9 +13,20 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Global exception handler
+ * @author duytoan
+ * @since 10/2025
+ */
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+    /**
+     * Method handle the global exception, the last catch if other handler isn't called
+     * @param exception -> exception class object
+     * @param webRequest -> web request class object
+     * @return res entity
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception, WebRequest webRequest) {
         log.error("An Exception occurred due to : {}", exception.getMessage());
@@ -30,6 +41,11 @@ public class GlobalExceptionHandler {
                 .body(errorResponseDto);
     }
 
+    /**
+     * Method to handle validation exception
+     * @param e -> valid exception class object
+     * @return res entity
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
@@ -39,6 +55,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    /**
+     * Specific method to throw when finding a resource but coudn't
+     * @param exception -> exception class obj
+     * @param webRequest -> web request class obj
+     * @return res entity
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(

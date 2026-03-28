@@ -18,10 +18,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Global security config
+ * @author duytoan
+ * @since 10/2025
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -44,10 +48,12 @@ public class SecurityConfig {
                     );
                     requests.requestMatchers("/oauth2/**").permitAll();
                     requests.anyRequest().hasAnyRole("USER", "ADMIN");
+//                    requests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 })
                 .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2LoginSuccessHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(h -> h.frameOptions(f -> f.sameOrigin()))
                 .build();
     }
 
@@ -59,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
         config.setAllowCredentials(true);

@@ -26,7 +26,7 @@ public class PublicPathConfig {
                 "/api/v1/auth/**",
                 "/actuator/health",
                 "/error",
-                "/ws/**"
+                "/chat/**"
         );
     }
 }

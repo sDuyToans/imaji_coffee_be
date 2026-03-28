@@ -1,4 +1,4 @@
-package com.duytoan.imajicoffee.imaji_coffee_be.config;
+package com.duytoan.imajicoffee.imaji_coffee_be.config.ws;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.utils.JwtCookieHandshakeInterceptor;
 import com.duytoan.imajicoffee.imaji_coffee_be.utils.UserHandshakeHandler;
@@ -24,9 +24,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+        // enable both topic and queue so convertAndSendToUser("user","/queue/messages", ...) works
         registry.enableSimpleBroker("/topic", "/queue");
         registry.setApplicationDestinationPrefixes("/app");
+        // configure user destination prefix so messagingTemplate.convertAndSendToUser resolves to /user/{username}/queue/...
         registry.setUserDestinationPrefix("/user");
+//        registry.setUserDestinationPrefix("/user");
 //        WebSocketMessageBrokerConfigurer.super.configureMessageBroker(registry);
     }
 
@@ -34,8 +37,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOriginPatterns("http://localhost:5173")
-                .addInterceptors(interceptor)
-                .setHandshakeHandler(handshakeHandler)
+//                .addInterceptors(interceptor)
+//                .setHandshakeHandler(handshakeHandler)
                 .withSockJS();
 //        WebSocketMessageBrokerConfigurer.super.registerStompEndpoints(registry);
     }

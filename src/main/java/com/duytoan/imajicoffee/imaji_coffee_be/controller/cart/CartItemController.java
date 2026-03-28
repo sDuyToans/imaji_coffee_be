@@ -23,28 +23,47 @@ public class CartItemController {
     private final ICartItemService cartItemService;
     private final GetAuthenticationInfo getAuthenticationInfo;
 
+    /**
+     * Add item to cart item
+     * @param authentication -> Authentication object from Spring Security
+     * @param cartItemRequestDto -> CartItemRequestDto object containing productId and quantity
+     * @return ResponseEntity containing CartItemResponseDto object and HTTP status code
+     */
     @PostMapping
     public ResponseEntity<CartItemResponseDto> addItem(Authentication authentication, @RequestBody CartItemRequestDto cartItemRequestDto) {
-        Long userId = getAuthenticationInfo.getUserId(authentication);
+        Long userId = getAuthenticationInfo.getUserId();
         CartItemResponseDto cartItemResponseDto = cartItemService.addItem(userId, cartItemRequestDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(cartItemResponseDto);
     }
 
+    /**
+     * Update quantity for item in cart item
+     * @param authentication -> Authentication object from Spring Security
+     * @param cartItemId -> ID of the cart item to be updated
+     * @param request -> UpdateQuantityCartItemRequest object containing the new quantity
+     * @return ResponseEntity containing CartItemResponseDto object and HTTP status code
+     */
     @PatchMapping("/{cartItemId}")
     public ResponseEntity<CartItemResponseDto> updateItem(
             Authentication authentication,
             @PathVariable Long cartItemId,
             @RequestBody UpdateQuantityCartItemRequest request) {
-        Long userId = getAuthenticationInfo.getUserId(authentication);
+        Long userId = getAuthenticationInfo.getUserId();
         CartItemResponseDto updatedCartItemResponseDto = cartItemService.updateItem(userId, cartItemId, request.getQuantity());
         return ResponseEntity.status(HttpStatus.OK).body(updatedCartItemResponseDto);
     }
 
+    /**
+     * Remove item from cart item
+     * @param authentication -> Authentication object from Spring Security
+     * @param cartItemId -> ID of the cart item to be removed
+     * @return ResponseEntity with HTTP status code indicating the result of the operation
+     */
     @DeleteMapping("/{cartItemId}")
     public ResponseEntity<Void> removeItem(Authentication authentication, @PathVariable Long cartItemId) {
-        Long userId = getAuthenticationInfo.getUserId(authentication);
+        Long userId = getAuthenticationInfo.getUserId();
         cartItemService.removeItem(userId, cartItemId);
 
         return ResponseEntity.noContent().build();

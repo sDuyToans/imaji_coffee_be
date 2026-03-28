@@ -5,12 +5,12 @@ import com.duytoan.imajicoffee.imaji_coffee_be.dto.order.OrderRequestDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.order.OrderResponseDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.order.UpdateOrderStatusDto;
 import com.duytoan.imajicoffee.imaji_coffee_be.services.order.IOrderService;
+import com.duytoan.imajicoffee.imaji_coffee_be.utils.GetAuthenticationInfo;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,34 +22,32 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/order")
 public class OrderController {
     private final IOrderService orderService;
+    private final GetAuthenticationInfo getAuthenticationInfo;
 
     /**
-     * Create order with order info and authentication object
-     * @param authentication -> Auth class obj
-     * @param request -> order request info
+     * Create order
+     * @param request -> order request dto
      * @return -> res entity
      * @throws MessagingException -> mess ex
      */
     @PostMapping
     public ResponseEntity<OrderResponseDto> createOrder(
-            Authentication authentication,
             @Valid @RequestBody OrderRequestDto request
     ) throws MessagingException {
-        Long userId = authentication != null ? Long.parseLong(authentication.getName()) : null;
+        Long userId = getAuthenticationInfo.getUserId();
         OrderResponseDto orderResponseDto = orderService.createOrder(request, userId);
         return ResponseEntity.ok(orderResponseDto);
     }
 
     /**
      * Create order for PayPal
-     * @param authentication -> auth class obj
      * @param request -> order request dto
      * @return -> res entity
      * @throws MessagingException -> mess ex
      */
     @PostMapping("/paypal")
-    public ResponseEntity<OrderResponseDto> createOrderForPayPal(Authentication authentication, @Valid @RequestBody OrderRequestDto request) throws MessagingException {
-        Long userId = authentication != null ? Long.parseLong(authentication.getName()) : null;
+    public ResponseEntity<OrderResponseDto> createOrderForPayPal(@Valid @RequestBody OrderRequestDto request) throws MessagingException {
+        Long userId = getAuthenticationInfo.getUserId();
         OrderResponseDto orderResponseDto = orderService.createOrderForPaypal(request, userId);
         return ResponseEntity.ok(orderResponseDto);
     }

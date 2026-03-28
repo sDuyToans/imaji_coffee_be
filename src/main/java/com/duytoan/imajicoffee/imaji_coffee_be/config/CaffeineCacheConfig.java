@@ -11,12 +11,12 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cache for spring boot -> using Caffeien for small implementation instead of Redix, etc...
+ * Cache configuration class for Caffeine cache
  * @author duytoan
  * @since 10/2025
  */
 @Configuration
-public class CaffeineCatchConfig {
+public class CaffeineCacheConfig {
     private Caffeine<Object, Object> cacheSpec() {
         return Caffeine.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
@@ -25,7 +25,7 @@ public class CaffeineCatchConfig {
 
     /**
      * Method defines name catch for each routes
-     * @return
+     * @return CacheManager object
      */
     @Bean
     public CacheManager caffeineCacheManager() {

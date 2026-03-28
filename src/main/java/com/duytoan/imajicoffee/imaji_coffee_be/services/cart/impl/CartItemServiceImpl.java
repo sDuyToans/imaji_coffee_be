@@ -54,6 +54,11 @@ public class CartItemServiceImpl implements ICartItemService {
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "ProductId", request.productId().toString()));
 
+        // If cart item quantity is greater than product quantity -> throw exception
+        if (product.getQuantity() < request.quantity()) {
+            throw new IllegalArgumentException("Requested quantity exceeds available stock for product: " + product.getName());
+        }
+
         // If product exists -> update quantity
         CartItem item = cart.getCartItems().stream()
                 .filter(cartItem -> cartItem.getProduct().getProductId().equals(product.getProductId()))

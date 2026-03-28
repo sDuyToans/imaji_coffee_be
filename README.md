@@ -1,65 +1,118 @@
-# IMAJI COFFEE BACKEND
+# ☕ IMAJI COFFEE BACKEND
 
-## Introduction
-This is the backend for the IMAJI COFFEE application, which provides a RESTful API for managing coffee products, 
-orders, and user accounts. 
-The backend is built using Spring Boot, and it connects to a MySQL database to store data.
+![Java](https://img.shields.io/badge/Java-17-orange)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-blue)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-## Features
-- User authentication and authorization
-- CRUD operations for coffee products
-- Order management
-- Admin dashboard for managing products and orders
-- Integration with payment gateways
-- Email notifications for order updates
-- API documentation using Swagger
-- Unit and integration testing
-- Dockerized for easy deployment
-- CI/CD pipeline for automated testing and deployment
-- Scalable architecture to handle increasing traffic
-- Caching for improved performance
-- Logging and monitoring for better debugging and performance tracking
-- Support for multiple languages and currencies
-- Mobile-friendly API for seamless integration with mobile applications
-- Real-time updates using WebSockets for order status changes
-- Role-based access control for different user types (admin, customer, etc.)
-- Data validation and error handling for robust API responses
-- Secure password storage and authentication mechanisms
-- API versioning for backward compatibility
-- AI customer support integration for handling customer inquiries and support tickets
-- Real-time chat support for customers to interact with support agents
-- Analytics dashboard for tracking sales, user behavior, and other key metrics
+---
 
-## Technologies Used
-- Java 17
-- Spring Boot
-- MySQL
-- JPA/Hibernate
-- Spring Security
-- JWT for authentication
-- Swagger for API documentation
-- Docker for containerization
-- JUnit and Mockito for testing
-- Maven for build management
-- Git for version control
-- CI/CD tools (e.g., Jenkins, GitHub Actions) for automated testing and deployment
+## 🚀 Overview
+IMAJI COFFEE Backend is a **production-ready e-commerce API** built with Spring Boot.  
+It supports **real-time chat, secure authentication, order processing**, and is fully **Dockerized for deployment**.
 
-## Getting Started
-1. Clone the repository: `git clone 
-2. Navigate to the project directory: `cd imaji-coffee-backend`
-3. Set up the MySQL database and update the `application.properties` file with your database credentials.
-4. Build the project: `mvn clean install`
-5. Run the application: `mvn spring-boot:run`
-6. Access the API documentation at `http://localhost:8080/swagger-ui.html`
-7. Use the API endpoints to manage coffee products, orders, and user accounts.
-8. Run tests: `mvn test`
-9. Dockerize the application: `docker build -t imaji-coffee-backend .`
-10. Run the Docker container: `docker run -p 8080:8080 imaji-coffee-backend`
+Designed with scalability and real-world practices in mind.
 
-## Contributing
-Contributions are welcome! Please fork the repository and create a pull request with your changes.
+---
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+## ✨ Key Features
+- 🔐 JWT Authentication & Authorization
+- 👥 Role-based access (Admin / Customer)
+- 🛒 Product & Order Management
+- 💳 Payment Integration
+- 📧 Email Notifications
+- 💬 Real-time Chat (WebSocket + STOMP)
+- ⚡ Caching with Caffeine
+- 📊 Logging & Monitoring
+- 📄 Swagger API Docs
+- 🐳 Dockerized (1-command setup)
+- 🔁 CI/CD Ready
 
+---
+
+## 🏗️ Architecture
+
+```text
+Client (Web / Mobile)
+        │
+        ▼
+   REST API (Spring Boot)
+        │
+ ┌───────────────┐
+ │  Service Layer│
+ └───────────────┘
+        │
+ ┌───────────────┐
+ │ Repository    │
+ │ (JPA/Hibernate)
+ └───────────────┘
+        │
+        ▼
+      MySQL
+
+WebSocket (Real-time Chat)
+        ▲
+        │
+   STOMP Broker
+
+```
+
+## ⚙️ How to Run
+
+### 🐳 Run with Docker (Recommended)
+
+1. Clone the repository:
+```bash
+git clone https://github.com/sDuyToans/imaji_coffee_be
+cd imaji_coffee_be
+```
+2.	Create a .env file in the root folder:
+```
+imaji_coffee_be/
+├── docker-compose.yml
+├── Dockerfile
+├── .env   ← HERE
+├── src/
+├── target/
+# Server
+SERVER_PORT=8080
+
+# Database
+DATABASE_HOST=mysql
+DATABASE_PORT=3306
+DATABASE_NAME=imajicoffee
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=root
+
+# JWT
+JWT_SECRET=your_super_secret_key_here
+
+# Stripe
+STRIPE_SECRET_KEY=your_stripe_secret
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+
+# Email (optional)
+MAIL_USERNAME=your_email@gmail.com
+MAIL_PASSWORD=your_email_password
+
+# Google OAuth (optional)
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+
+# Frontend
+FRONT_END_CALL_BACK_URL=http://localhost:5173/auth/callback
+
+# CORS
+CORS_ALLOWED_ORIGINS=http://localhost:5173
+```
+3.	Start the application:
+```bash
+docker compose up --build
+```
+4.	Access the app:
+```
+•	API: http://localhost:8080
+•	Swagger: http://localhost:8080/swagger-ui.html
+```
 

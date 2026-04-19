@@ -18,24 +18,26 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ChatMessage extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @Column(name = "message_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-
-    @JoinColumn(name = "conversation_id")
-
+    @JoinColumn(name = "conversation_id", nullable = false)
     private ChatConversation conversation;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "sender_type", nullable = false)
     private SenderType senderType;
 
+    @Column(name = "sender_id", nullable = false)
     private Long senderId;
 
+    @Column(name = "sender_name")
     private String senderName;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 }

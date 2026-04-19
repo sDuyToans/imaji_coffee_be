@@ -14,6 +14,11 @@ import java.util.List;
 public interface IChatService {
 
     /**
+     * Retrieves an existing open conversation for a given customer or creates a new one if none exists.
+     */
+    ChatConversationResponse getOrCreateConversation(Long customerId);
+
+    /**
      * Creates a new chat conversation for a given customer.
      */
     ChatConversationResponse createConversation(Long customerId);

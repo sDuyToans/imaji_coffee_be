@@ -46,7 +46,7 @@ public class SecurityConfig {
                     publicPaths.forEach(path ->
                             requests.requestMatchers(path).permitAll()
                     );
-                    requests.requestMatchers("/oauth2/**").permitAll();
+                    requests.requestMatchers("/oauth2/**", "/login/oauth2/**").permitAll();
                     requests.anyRequest().hasAnyRole("USER", "ADMIN");
 //                    requests.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                 })

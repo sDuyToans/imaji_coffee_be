@@ -1,5 +1,4 @@
 HELP.md
-target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -40,5 +39,3 @@ application-secret.properties
 target/
 
 
-### ignore env files
-.env

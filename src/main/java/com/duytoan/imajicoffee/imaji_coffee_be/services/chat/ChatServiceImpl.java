@@ -32,6 +32,19 @@ public class ChatServiceImpl implements IChatService{
     private final ChatMessageRepository chatMessageRepository;
 
     /**
+     * Retrieves an existing open conversation for a given customer or creates a new one if none exists.
+     *
+     * @param customerId
+     */
+    @Override
+    public ChatConversationResponse getOrCreateConversation(Long customerId) {
+        return chatConversationRepository
+                .findFirstByCustomerIdAndStatusOrderByUpdatedAtDesc(customerId, ConversationStatus.OPEN)
+                .map(this::toChatConversationResponse)
+                .orElseGet(() -> createConversation(customerId));
+    }
+
+    /**
      * Creates a new chat conversation for a given customer.
      *
      * @param customerId
@@ -42,8 +55,10 @@ public class ChatServiceImpl implements IChatService{
                 .customerId(customerId)
                 .status(ConversationStatus.OPEN)
                 .build();
+        conversation.setCreatedBy("SYSTEM");
+        conversation.setUpdatedBy("SYSTEM");
         ChatConversation saved = chatConversationRepository.save(conversation);
-        return toChatConversationResponse(conversation);
+        return toChatConversationResponse(saved);
     }
 
     /**

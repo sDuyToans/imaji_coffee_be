@@ -21,15 +21,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatConversation extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "conversation_id")
     private Long id;
 
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
+    @Column(name = "admin_id")
     private Long assignedAdminId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private ConversationStatus status;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, orphanRemoval = true)

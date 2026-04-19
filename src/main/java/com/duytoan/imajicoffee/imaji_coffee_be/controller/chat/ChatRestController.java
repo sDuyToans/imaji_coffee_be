@@ -59,4 +59,14 @@ public class ChatRestController {
     public List<ChatConversationResponse> getAdminConversations(@PathVariable Long adminId){
         return chatService.getAdminConversations(adminId);
     }
+
+    /**
+     * Get an existing open conversation for a customer or create a new one if none exists
+     * @param customerId the ID of the customer
+     * @return the chat conversation response
+     */
+    @GetMapping("/customer/{customerId}/current")
+    public ChatConversationResponse getOrCreateConversation(@PathVariable Long customerId) {
+        return chatService.getOrCreateConversation(customerId);
+    }
 }

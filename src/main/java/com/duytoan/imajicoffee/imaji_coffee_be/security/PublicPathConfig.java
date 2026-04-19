@@ -24,9 +24,9 @@ public class PublicPathConfig {
                 "/api/v1/webhooks/**",
                 "/api/v1/ship-methods/**",
                 "/api/v1/auth/**",
+                "/api/v1/chat/**",
                 "/actuator/health",
-                "/error",
-                "/chat/**"
+                "/error"
         );
     }
 }

@@ -31,7 +31,7 @@ public class ChatController {
     @MessageMapping("/chat/{chatId}")
     @SendTo("/api/v1/topic/chat/{chatId}")
     public ChatMessageResponse sendMessage(
-            @DestinationVariable Long conversationId,
+            @DestinationVariable("chatId") Long conversationId,
             ChatMessageRequest request
     ) {
         log.info("NEW MESSAGE RECEIVED FOR CONVERSATION ID: {}", conversationId);

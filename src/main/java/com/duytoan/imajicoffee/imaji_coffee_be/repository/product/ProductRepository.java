@@ -2,13 +2,16 @@ package com.duytoan.imajicoffee.imaji_coffee_be.repository.product;
 
 
 import com.duytoan.imajicoffee.imaji_coffee_be.entities.product.Product;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Product repository
@@ -18,19 +21,12 @@ import java.math.BigDecimal;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     /**
      * Filter product by category and pageable
-     * @param category
-     * @param pageable
      * @return products page
      */
     Page<Product> findByCategory(String category, Pageable pageable);
 
     /**
      * Filter product by category, name, and price
-     * @param category
-     * @param search
-     * @param maxPrice
-     * @param pageable
-     * @return products page
      */
     @Query("SELECT p FROM Product p " +
             "WHERE (:category IS NULL OR p.category = :category) " +
@@ -43,11 +39,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             Pageable pageable);
 
     /**
+     * Find product by product id with pessimistic lock for update
+     * Why: acquires DB write lock inside the same transaction to prevent concurrent decrements.
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Product p WHERE p.productId = :productId")
+    Optional<Product> findByProductIdForUpdate(@Param("productId") Long productId);
+
+
+    /**
      * Filter related products by category and exclude current product by using product id
-     * @param category
-     * @param excludeId
-     * @param pageable
-     * @return products page
      */
     @Query("SELECT p FROM Product p " +
             "WHERE (:category IS NULL OR p.category = :category) " +

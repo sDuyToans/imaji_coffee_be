@@ -33,7 +33,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
     @Override
     public void saveOrderItems(Order order, List<OrderItemDto> orderItemDtoList) {
         List<OrderItem> orderItems = orderItemDtoList.stream().map(itemDto -> {
-            Product product = productRepository.findById(itemDto.productId())
+            Product product = productRepository.findByProductIdForUpdate(itemDto.productId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product", "ProductId", itemDto.productId().toString()));
             // Deduct product quantity
             int newQuantity = product.getQuantity() - itemDto.quantity();

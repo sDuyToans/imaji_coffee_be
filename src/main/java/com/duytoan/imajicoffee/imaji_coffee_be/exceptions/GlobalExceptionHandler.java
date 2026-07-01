@@ -2,6 +2,7 @@ package com.duytoan.imajicoffee.imaji_coffee_be.exceptions;
 
 import com.duytoan.imajicoffee.imaji_coffee_be.dto.error.ErrorResponseDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,9 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), err.getDefaultMessage());
-        });
+        e.getBindingResult().getFieldErrors().forEach(err -> errors.put(err.getField(), err.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
 
@@ -71,6 +70,25 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(errorResponseDto);
+    }
+
+    /**
+     * Specific method to throw when pessimistic locking failure occurs
+     * @param exception -> exception class obj
+     * @param webRequest -> web request class obj
+     * @return res entity
+     */
+    @ExceptionHandler(PessimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponseDto> handlePessimisticLockingFailureException(PessimisticLockingFailureException exception, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                HttpStatus.CONFLICT,
+                "Resource is currently locked. Please try again later." + exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
                 .body(errorResponseDto);
     }
 }

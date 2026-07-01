@@ -139,10 +139,9 @@ public class OrderServiceImpl implements IOrderService {
      */
     @Override
     public List<AccountOrderDetailResponseDto> getAccountOrders(Long userId) {
-        List<AccountOrderDetailResponseDto> orderList = orderRepository.findByUserId(userId)
+        return orderRepository.findByUserId(userId)
                 .stream().map(this::mapToAccountOderDetail)
                 .toList();
-        return orderList;
     }
 
     /**
@@ -187,7 +186,7 @@ public class OrderServiceImpl implements IOrderService {
      * @return -> order item res dto
      */
     private OrderItemResponseDto mapToOrderItemResponseDto(OrderItem orderItem) {
-        OrderItemResponseDto orderItemResponseDto = new OrderItemResponseDto(
+        return new OrderItemResponseDto(
                 orderItem.getProductId(),
                 orderItem.getProductName(),
                 orderItem.getProductImg(),
@@ -195,7 +194,6 @@ public class OrderServiceImpl implements IOrderService {
                 orderItem.getPrice(),
                 orderItem.getQuantity()
         );
-        return orderItemResponseDto;
     }
 
     /**
